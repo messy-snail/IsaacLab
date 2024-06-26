@@ -4,19 +4,32 @@
     "version": "2.0.0",
     "tasks": [
         {
-            // setup python env
             "label": "setup_python_env",
             "type": "shell",
             "linux": {
                 "command": "export CARB_APP_PATH=${workspaceFolder}/_isaac_sim/kit && export ISAAC_PATH=${workspaceFolder}/_isaac_sim && export EXP_PATH=${workspaceFolder}/_isaac_sim/apps && source ${workspaceFolder}/_isaac_sim/setup_python_env.sh && printenv >${workspaceFolder}/.vscode/.python.env && ${workspaceFolder}/_isaac_sim/python.sh ${workspaceFolder}/.vscode/tools/setup_vscode.py"
+            },
+            "windows": {
+                "command": "set CARB_APP_PATH=%workspaceFolder%\\_isaac_sim\\kit && set ISAAC_PATH=%workspaceFolder%\\_isaac_sim && set EXP_PATH=%workspaceFolder%\\_isaac_sim\\apps && call %workspaceFolder%\\_isaac_sim\\setup_python_env.bat && set > %workspaceFolder%\\.vscode\\.python.env && call %workspaceFolder%\\_isaac_sim\\python.bat %workspaceFolder%\\.vscode\\tools\\setup_vscode.py",
+                "options": {
+                    "shell": {
+                        "executable": "cmd.exe",
+                        "args": ["/d", "/c"]
+                    },
+                    "env": {
+                        "workspaceFolder": "${workspaceFolder}"
+                    }
+                }
             }
         },
         {
-            // run formatter
             "label": "run_formatter",
             "type": "shell",
             "linux": {
                 "command": "${workspaceFolder}/isaaclab.sh --format"
+            },
+            "windows": {
+                "command": "${workspaceFolder}\\isaaclab.bat --format"
             }
         }
     ]

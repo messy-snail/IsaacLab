@@ -57,3 +57,5 @@ _build
 **/runs/*
 **/logs/*
 **/recordings/*
+
+isaac-sim-4.0.0
