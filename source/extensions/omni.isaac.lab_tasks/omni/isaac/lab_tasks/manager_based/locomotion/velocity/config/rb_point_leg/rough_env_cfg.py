@@ -51,11 +51,11 @@ class RbPointLegRewardsCfg(RewardsCfg):
     #     func=mdp.track_ang_vel_z_world_exp, weight=2.0, params={"command_name": "base_velocity", "std": 0.5}
     # )
     
-    joint_deviation_roll = RewTerm(
-        func=mdp.joint_deviation_l1,
-        weight=-0.2,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ROLL_joint"])},
-    )
+    # joint_deviation_roll = RewTerm(
+    #     func=mdp.joint_deviation_l1,
+    #     weight=-0.2,
+    #     params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ROLL_joint"])},
+    # )
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
         weight=2,
@@ -124,6 +124,7 @@ class RbPointLegRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         # terminations
         self.terminations.base_contact.params["sensor_cfg"].body_names = ["base_link"]
 
+        self.rewards.flat_orientation_l2.weight = -1.0
         # self.rewards.ang_vel_xy_l2.weight = -0.2
         self.rewards.dof_torques_l2.weight = -5.0e-6
         self.rewards.track_lin_vel_xy_exp.weight = 2.0
