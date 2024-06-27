@@ -13,12 +13,31 @@ from omni.isaac.lab_tasks.manager_based.locomotion.velocity.velocity_env_cfg imp
     MySceneCfg,
     RewardsCfg,
 )
-
+import math
 ##
 # Pre-defined configs
 ##
 from omni.isaac.lab_assets.rb_point_leg import RB_POINT_LEG_CFG  # isort: skip
 
+
+@configclass
+class RbPointLegCommandsCfg:
+    """Command specifications for the MDP."""
+
+    base_velocity = mdp.UniformVelocityCommandCfg(
+        asset_name="robot",
+        resampling_time_range=(10.0, 10.0),
+        rel_standing_envs=0.1,
+        rel_heading_envs=1.0,
+        heading_command=True,
+        heading_control_stiffness=0.5,
+        debug_vis=True,
+        ranges=mdp.UniformVelocityCommandCfg.Ranges(
+            lin_vel_x=(-1.0, 1.0), lin_vel_y=(-1.0, 1.0), ang_vel_z=(-1.0, 1.0), heading=(-math.pi, math.pi)
+        # ranges=mdp.UniformVelocityCommandCfg.Ranges(
+        #     lin_vel_x=(-2.0, 2.0), lin_vel_y=(-2.0, 2.0), ang_vel_z=(-1.5, 1.5), heading=(-math.pi, math.pi)
+        ),
+    )
 
 @configclass
 class RbPointLegRewardsCfg(RewardsCfg):
@@ -31,9 +50,15 @@ class RbPointLegRewardsCfg(RewardsCfg):
     # track_ang_vel_z_exp = RewTerm(
     #     func=mdp.track_ang_vel_z_world_exp, weight=2.0, params={"command_name": "base_velocity", "std": 0.5}
     # )
+    
+    joint_deviation_roll = RewTerm(
+        func=mdp.joint_deviation_l1,
+        weight=-0.2,
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ROLL_joint"])},
+    )
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=2.5,
+        weight=2,
         params={
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["L_foot_link", "R_foot_link"]),
             "command_name": "base_velocity",
@@ -69,7 +94,7 @@ class RbPointLegRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
     """RbPointLeg rough environment configuration."""
 
     rewards:RbPointLegRewardsCfg = RbPointLegRewardsCfg()
-
+    commands: RbPointLegCommandsCfg = RbPointLegCommandsCfg()
     def __post_init__(self):
         super().__post_init__()
         # scene
@@ -99,7 +124,7 @@ class RbPointLegRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         # terminations
         self.terminations.base_contact.params["sensor_cfg"].body_names = ["base_link"]
 
-        
+        # self.rewards.ang_vel_xy_l2.weight = -0.2
         self.rewards.dof_torques_l2.weight = -5.0e-6
         self.rewards.track_lin_vel_xy_exp.weight = 2.0
         self.rewards.track_ang_vel_z_exp.weight = 1.0
@@ -141,7 +166,7 @@ class RbPointLegRoughEnvCfg_PLAY_Env(RbPointLegRoughEnvCfg):
         self.scene.env_spacing = 2.5
         # spawn the robot randomly in the grid (instead of their terrain levels)
         self.scene.terrain.max_init_terrain_level = None
-        self.curriculum.terrain_levels = None
+        # self.curriculum.terrain_levels = None
         
         self.commands.base_velocity.ranges.lin_vel_x = (0.7, 1.0)
         self.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)

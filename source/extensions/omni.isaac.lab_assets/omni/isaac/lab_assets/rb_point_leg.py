@@ -18,6 +18,7 @@ RB_POINT_LEG_CFG = ArticulationCfg(
 #C:\Users\snail\Desktop\rb-point-2legs\urdf\RB_POINT_2_LEGS_FINAL
     spawn=sim_utils.UsdFileCfg(
         usd_path=f"C:/Users/snail/Desktop/rb-point-2legs/urdf/RB_POINT_2_LEGS_FINAL/RB_POINT_2_LEGS_FINAL.usd",
+        # usd_path=r"C:\Users\snail\Desktop\rbl1c\urdf\rbl1c\rbl1c.usd",
         # usd_path=f"C:/Users/snail/Desktop/legged_gym/resources/robots/rbl1c/urdf/rbl1c/rbl1c.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
@@ -53,16 +54,18 @@ RB_POINT_LEG_CFG = ArticulationCfg(
             # joint_names_expr=[".*"],
             effort_limit=200.0,
             velocity_limit=10.0,
-            stiffness = {   
-                '.*_ROLL_joint': 100., 
-                '.*_HIP_joint': 100, 
-                '.*_KNEE_joint': 100,
-            },
-            damping={
-                '.*_ROLL_joint': 3., 
-                '.*_HIP_joint': 3., 
-                '.*_KNEE_joint': 3.,
-            },
+            # stiffness = {   
+            #     '.*_ROLL_joint': 100., 
+            #     '.*_HIP_joint': 100, 
+            #     '.*_KNEE_joint': 100,
+            # },
+            # damping={
+            #     '.*_ROLL_joint': 3., 
+            #     '.*_HIP_joint': 3., 
+            #     '.*_KNEE_joint': 3.,
+            # },
+            stiffness=60.0,
+            damping=1.5,
         ),
     },
 )
@@ -70,6 +73,7 @@ RB_POINT_LEG_CFG = ArticulationCfg(
 RB_POINT_LEG_STANDING_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
         usd_path=f"C:/Users/snail/Desktop/rb-point-2legs/urdf/RB_POINT_2_LEGS_FINAL/RB_POINT_2_LEGS_FINAL.usd",
+        # usd_path=r"C:\Users\snail\Desktop\rbl1c\urdf\rbl1c\rbl1c.usd",
         # usd_path=f"C:/Users/snail/Desktop/legged_gym/resources/robots/rbl1c/urdf/rbl1c/rbl1c.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
@@ -101,16 +105,18 @@ RB_POINT_LEG_STANDING_CFG = ArticulationCfg(
             # joint_names_expr=[".*"],
             effort_limit=200.0,
             velocity_limit=10.0,
-            stiffness = {   
-                '.*_ROLL_joint': 100., 
-                '.*_HIP_joint': 100, 
-                '.*_KNEE_joint': 100,
-            },
-            damping={
-                '.*_ROLL_joint': 3., 
-                '.*_HIP_joint': 3., 
-                '.*_KNEE_joint': 3.,
-            },
+            # stiffness = {   
+            #     '.*_ROLL_joint': 100., 
+            #     '.*_HIP_joint': 100, 
+            #     '.*_KNEE_joint': 100,
+            # },
+            # damping={
+            #     '.*_ROLL_joint': 3., 
+            #     '.*_HIP_joint': 3., 
+            #     '.*_KNEE_joint': 3.,
+            # },
+            stiffness=60.0,
+            damping=1.5,
         ),
     },
 )

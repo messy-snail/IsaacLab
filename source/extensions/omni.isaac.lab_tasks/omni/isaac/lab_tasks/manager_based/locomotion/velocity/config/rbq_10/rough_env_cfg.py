@@ -32,7 +32,11 @@ class RbQ10RewardsCfg(RewardsCfg):
     #     func=mdp.track_ang_vel_z_world_exp, weight=2.0, params={"command_name": "base_velocity", "std": 0.5}
     # )
     
-    # Cassie Base
+    # joint_deviation_roll = RewTerm(
+    #     func=mdp.joint_deviation_l1,
+    #     weight=-0.2,
+    #     params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ROLL_joint"])},
+    # )
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
         weight=0.125,
@@ -95,6 +99,9 @@ class RbQ10RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         # self.rewards.track_ang_vel_z_exp.weight = 1.0
         # self.rewards.action_rate_l2.weight *= 1.5
         # self.rewards.dof_acc_l2.weight *= 1.5
+        # self.commands.base_velocity.ranges.lin_vel_x = (-2.0, 2.0)
+        # self.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)
+        # self.commands.base_velocity.ranges.ang_vel_z = (-1.0, 1.0)
 
 
 @configclass
@@ -130,8 +137,8 @@ class RbQ10RoughEnvCfg_PLAY_Env(RbQ10RoughEnvCfg):
         self.scene.num_envs = 50
         self.scene.env_spacing = 2.5
         # spawn the robot randomly in the grid (instead of their terrain levels)
-        self.scene.terrain.max_init_terrain_level = None
-        self.curriculum.terrain_levels = None
+        # self.scene.terrain.max_init_terrain_level = None
+        # self.curriculum.terrain_levels = None
         
         self.commands.base_velocity.ranges.lin_vel_x = (0.7, 1.0)
         self.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)
