@@ -40,3 +40,5 @@ from .shadow_hand import *
 from .unitree import *
 from .universal_robots import *
 from .rb_point_leg import *
+from .rb10_1300e import *
+from .rb5_850e import *

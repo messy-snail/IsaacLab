@@ -53,7 +53,7 @@ from omni.isaac.lab.utils.math import subtract_frame_transforms
 ##
 # Pre-defined configs
 ##
-from omni.isaac.lab_assets import FRANKA_PANDA_HIGH_PD_CFG, UR10_CFG  # isort:skip
+from omni.isaac.lab_assets import FRANKA_PANDA_HIGH_PD_CFG, UR10_CFG, RB10_1300e_CFG, RB5_850e_CFG  # isort:skip
 
 
 @configclass
@@ -85,6 +85,10 @@ class TableTopSceneCfg(InteractiveSceneCfg):
         robot = FRANKA_PANDA_HIGH_PD_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
     elif args_cli.robot == "ur10":
         robot = UR10_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    elif args_cli.robot == "rb10_1300e":
+        robot = RB10_1300e_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    elif args_cli.robot == "rb5_850e":
+        robot = RB5_850e_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
     else:
         raise ValueError(f"Robot {args_cli.robot} is not supported. Valid: franka_panda, ur10")
 
@@ -106,10 +110,15 @@ def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
     goal_marker = VisualizationMarkers(frame_marker_cfg.replace(prim_path="/Visuals/ee_goal"))
 
     # Define goals for the arm
+    # ee_goals = [
+    #     [0.5, 0.5, 0.7, 0.707, 0, 0.707, 0],
+    #     [0.5, -0.4, 0.6, 0.707, 0.707, 0.0, 0.0],
+    #     [0.5, 0, 0.5, 0.0, 1.0, 0.0, 0.0],
+    # ]
     ee_goals = [
-        [0.5, 0.5, 0.7, 0.707, 0, 0.707, 0],
-        [0.5, -0.4, 0.6, 0.707, 0.707, 0.0, 0.0],
-        [0.5, 0, 0.5, 0.0, 1.0, 0.0, 0.0],
+        [0.5, 0.5, 0.7, 0, 0, -1, 0],
+        [0.5, -0.4, 0.6, 0, 0, -1, 0],
+        [0.5, 0, 0.5, 0.0, 0, -1, 0.0],
     ]
     ee_goals = torch.tensor(ee_goals, device=sim.device)
     # Track the given command
@@ -123,6 +132,10 @@ def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
         robot_entity_cfg = SceneEntityCfg("robot", joint_names=["panda_joint.*"], body_names=["panda_hand"])
     elif args_cli.robot == "ur10":
         robot_entity_cfg = SceneEntityCfg("robot", joint_names=[".*"], body_names=["ee_link"])
+    elif args_cli.robot == "rb10_1300e":
+        robot_entity_cfg = SceneEntityCfg("robot", joint_names=[".*"], body_names=["tcp"])
+    elif args_cli.robot == "rb5_850e":
+        robot_entity_cfg = SceneEntityCfg("robot", joint_names=[".*"], body_names=["tcp"])
     else:
         raise ValueError(f"Robot {args_cli.robot} is not supported. Valid: franka_panda, ur10")
     # Resolving the scene entities

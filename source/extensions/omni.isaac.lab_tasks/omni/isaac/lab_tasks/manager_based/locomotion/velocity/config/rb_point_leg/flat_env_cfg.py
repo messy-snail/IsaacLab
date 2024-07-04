@@ -27,8 +27,8 @@ class RbPointLegFlatEnvCfg(RbPointLegRoughEnvCfg):
         # no terrain curriculum
         self.curriculum.terrain_levels = None
 
-
-class RbPointLegFlatEnvCfg_PLAY(RbPointLegRoughEnvCfg):
+@configclass
+class RbPointLegFlatEnvCfg_PLAY(RbPointLegFlatEnvCfg):
     def __post_init__(self) -> None:
         # post init of parent
         super().__post_init__()
@@ -38,3 +38,21 @@ class RbPointLegFlatEnvCfg_PLAY(RbPointLegRoughEnvCfg):
         self.scene.env_spacing = 2.5
         # disable randomization for play
         self.observations.policy.enable_corruption = False
+        
+
+from omni.isaac.lab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
+@configclass
+class RbPointLegFlatEnvCfg_PLAY_Env(RbPointLegFlatEnvCfg):
+    def __post_init__(self):
+        # post init of parent
+        super().__post_init__()
+         # make a smaller scene for play
+        self.scene.num_envs = 50
+        self.scene.env_spacing = 2.5
+
+        self.observations.policy.enable_corruption = False
+        # max_init_terrain_level
+        # self.scene.terrain.terrain_generator = None
+        self.scene.terrain.terrain_type = "usd"
+        # C:\Users\snail\Desktop\env_assets
+        self.scene.terrain.usd_path = f"{ISAAC_NUCLEUS_DIR}/Environments/Terrains/flat_plane.usd"

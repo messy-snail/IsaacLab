@@ -31,6 +31,11 @@ class RbPointLegRewardsCfg(RewardsCfg):
     # track_ang_vel_z_exp = RewTerm(
     #     func=mdp.track_ang_vel_z_world_exp, weight=2.0, params={"command_name": "base_velocity", "std": 0.5}
     # )
+    joint_deviation_roll = RewTerm(
+        func=mdp.joint_deviation_l1,
+        weight=-0.2,
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ROLL_joint"])},
+    )
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
         weight=2.5,

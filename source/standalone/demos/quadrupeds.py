@@ -46,6 +46,7 @@ from omni.isaac.lab.assets import Articulation
 from omni.isaac.lab_assets.anymal import ANYMAL_B_CFG, ANYMAL_C_CFG, ANYMAL_D_CFG  # isort:skip
 from omni.isaac.lab_assets.spot import SPOT_CFG  # isort:skip
 from omni.isaac.lab_assets.unitree import UNITREE_A1_CFG, UNITREE_GO1_CFG, UNITREE_GO2_CFG  # isort:skip
+from omni.isaac.lab_assets.rbq10 import RBQ10_CFG
 
 
 def define_origins(num_origins: int, spacing: float) -> list[list[float]]:
@@ -67,6 +68,7 @@ def design_scene() -> tuple[dict, list[list[float]]]:
     """Designs the scene."""
     # Ground-plane
     cfg = sim_utils.GroundPlaneCfg()
+    cfg.usd_path = r"C:/Users/snail/Desktop/env_assets/Simple_Warehouse/warehouse.usd"
     cfg.func("/World/defaultGroundPlane", cfg)
     # Lights
     cfg = sim_utils.DomeLightCfg(intensity=2000.0, color=(0.75, 0.75, 0.75))
@@ -74,7 +76,8 @@ def design_scene() -> tuple[dict, list[list[float]]]:
 
     # Create separate groups called "Origin1", "Origin2", "Origin3"
     # Each group will have a mount and a robot on top of it
-    origins = define_origins(num_origins=7, spacing=1.25)
+    # origins = define_origins(num_origins=7, spacing=1.25)
+    origins = define_origins(num_origins=8, spacing=1.25)
 
     # Origin 1 with Anymal B
     prim_utils.create_prim("/World/Origin1", "Xform", translation=origins[0])
@@ -107,9 +110,14 @@ def design_scene() -> tuple[dict, list[list[float]]]:
     unitree_go2 = Articulation(UNITREE_GO2_CFG.replace(prim_path="/World/Origin6/Robot"))
 
     # Origin 7 with Boston Dynamics Spot
-    prim_utils.create_prim("/World/Origin7", "Xform", translation=origins[5])
+    prim_utils.create_prim("/World/Origin7", "Xform", translation=origins[6])
     # -- Robot
     spot = Articulation(SPOT_CFG.replace(prim_path="/World/Origin7/Robot"))
+    
+    # Origin 8 with RBQ-10
+    prim_utils.create_prim("/World/Origin8", "Xform", translation=origins[7])
+    # -- Robot
+    rbq_10 = Articulation(RBQ10_CFG.replace(prim_path="/World/Origin8/Robot"))
 
     # return the scene information
     scene_entities = {
@@ -120,6 +128,7 @@ def design_scene() -> tuple[dict, list[list[float]]]:
         "unitree_go1": unitree_go1,
         "unitree_go2": unitree_go2,
         "spot": spot,
+        "rbq-10": rbq_10,
     }
     return scene_entities, origins
 
@@ -152,7 +161,8 @@ def run_simulator(sim: sim_utils.SimulationContext, entities: dict[str, Articula
         # apply default actions to the quadrupedal robots
         for robot in entities.values():
             # generate random joint positions
-            joint_pos_target = robot.data.default_joint_pos + torch.randn_like(robot.data.joint_pos) * 0.1
+            # joint_pos_target = robot.data.default_joint_pos + torch.randn_like(robot.data.joint_pos) * 0.1
+            joint_pos_target = robot.data.default_joint_pos + torch.randn_like(robot.data.joint_pos) * 0
             # apply action to the robot
             robot.set_joint_position_target(joint_pos_target)
             # write data to sim

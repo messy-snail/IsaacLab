@@ -16,7 +16,7 @@ from . import agents, ik_abs_env_cfg, ik_rel_env_cfg, joint_pos_env_cfg
 ##
 
 gym.register(
-    id="Isaac-Open-Drawer-Franka-v0",
+    id="Rb10_1300e-Open-Drawer-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": joint_pos_env_cfg.FrankaCabinetEnvCfg,
@@ -28,11 +28,10 @@ gym.register(
 )
 
 gym.register(
-    id="Isaac-Open-Drawer-Franka-Play-v0",
+    id="Rb10_1300e-Open-Drawer-Play-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": joint_pos_env_cfg.FrankaCabinetEnvCfg_PLAY,
-        "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.CabinetPPORunnerCfg,
     },
     disable_env_checker=True,
 )
@@ -43,7 +42,7 @@ gym.register(
 ##
 
 gym.register(
-    id="Isaac-Open-Drawer-Franka-IK-Abs-v0",
+    id="Rb10_1300e-Open-Drawer-IK-Abs-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": ik_abs_env_cfg.FrankaCabinetEnvCfg,
@@ -56,7 +55,7 @@ gym.register(
 ##
 
 gym.register(
-    id="Isaac-Open-Drawer-Franka-IK-Rel-v0",
+    id="Rb10_1300e-Open-Drawer-IK-Rel-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     kwargs={
         "env_cfg_entry_point": ik_rel_env_cfg.FrankaCabinetEnvCfg,

@@ -12,6 +12,11 @@ from . import agents, flat_env_cfg, rough_env_cfg
 ##
 
 
+
+##
+# Rough Env
+##
+
 gym.register(
     id="Rb-Point-Leg-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
@@ -34,6 +39,7 @@ gym.register(
     },
 )
 
+
 gym.register(
     id="Rb-Point-Leg-Play-Env-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
@@ -41,6 +47,44 @@ gym.register(
     kwargs={
         "env_cfg_entry_point": rough_env_cfg.RbPointLegRoughEnvCfg_PLAY_Env,
         "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.RbPointLegRoughPPORunnerCfg,
+        # "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
+    },
+)
+
+ 
+##
+# Flat Env
+##
+
+gym.register(
+    id="Rb-Point-Leg-Flat-v0",
+    entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": flat_env_cfg.RbPointLegFlatEnvCfg,
+        "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.RbPointLegFlatPPORunnerCfg,
+        # "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
+    id="Rb-Point-Leg-Flat-Play-v0",
+    entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": flat_env_cfg.RbPointLegFlatEnvCfg_PLAY,
+        "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.RbPointLegFlatPPORunnerCfg,
+        # "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
+    id="Rb-Point-Leg-Flat-Play-Env-v0",
+    entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": flat_env_cfg.RbPointLegFlatEnvCfg_PLAY_Env,
+        "rsl_rl_cfg_entry_point": agents.rsl_rl_cfg.RbPointLegFlatPPORunnerCfg,
         # "skrl_cfg_entry_point": f"{agents.__name__}:skrl_rough_ppo_cfg.yaml",
     },
 )

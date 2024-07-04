@@ -38,6 +38,7 @@ from omni.isaac.lab.sim import SimulationContext
 from omni.isaac.lab_assets.cassie import CASSIE_CFG  # isort:skip
 from omni.isaac.lab_assets import H1_CFG  # isort:skip
 from omni.isaac.lab_assets import G1_CFG  # isort:skip
+from omni.isaac.lab_assets import RB_POINT_LEG_CFG
 
 
 def main():
@@ -53,21 +54,24 @@ def main():
     # Spawn things into stage
     # Ground-plane
     cfg = sim_utils.GroundPlaneCfg()
+    cfg.usd_path = r"C:/Users/snail/Desktop/env_assets/Simple_Warehouse/warehouse.usd"
     cfg.func("/World/defaultGroundPlane", cfg)
     # Lights
-    cfg = sim_utils.DistantLightCfg(intensity=3000.0, color=(0.75, 0.75, 0.75))
+    cfg = sim_utils.DistantLightCfg(intensity=4000.0, color=(0.75, 0.75, 0.75))
     cfg.func("/World/Light", cfg)
 
     origins = torch.tensor([
         [0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0],
         [0.0, 2.0, 0.0],
+        [0.0, 3.0, 0.0],
     ])
     # Robots
     cassie = Articulation(CASSIE_CFG.replace(prim_path="/World/Cassie"))
     h1 = Articulation(H1_CFG.replace(prim_path="/World/H1"))
     g1 = Articulation(G1_CFG.replace(prim_path="/World/G1"))
-    robots = [cassie, h1, g1]
+    rb_point_leg = Articulation(RB_POINT_LEG_CFG.replace(prim_path="/World/RB_POINT_LEG"))
+    robots = [cassie, h1, g1, rb_point_leg]
 
     # Play the simulator
     sim.reset()

@@ -41,7 +41,7 @@ class RbQ10RewardsCfg(RewardsCfg):
         func=mdp.feet_air_time_positive_biped,
         weight=0.125,
         params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=[".*_foot"]),
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["RR_foot", "RL_foot"]),
             "command_name": "base_velocity",
             "threshold": 0.5,
         },
@@ -50,7 +50,7 @@ class RbQ10RewardsCfg(RewardsCfg):
     undesired_contacts = RewTerm(
             func=mdp.undesired_contacts,
             weight=-1.0,
-            params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=[".*thigh"]), "threshold": 1.0},
+            params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=[".*thigh", "FR_foot", "FL_foot"]), "threshold": 1.0},
     )
 
 
@@ -111,7 +111,7 @@ class RbQ10RoughEnvCfg_PLAY(RbQ10RoughEnvCfg):
         super().__post_init__()
 
         # make a smaller scene for play
-        self.scene.num_envs = 60
+        self.scene.num_envs = 50
         self.scene.env_spacing = 2.5
         # spawn the robot randomly in the grid (instead of their terrain levels)
         self.scene.terrain.max_init_terrain_level = None
@@ -121,7 +121,6 @@ class RbQ10RoughEnvCfg_PLAY(RbQ10RoughEnvCfg):
             self.scene.terrain.terrain_generator.num_cols = 5
             self.scene.terrain.terrain_generator.curriculum = False
 
-        self.commands.base_velocity.rel_standing_envs = 1
         self.commands.base_velocity.ranges.lin_vel_x = (0.7, 1.0)
         self.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)
         self.commands.base_velocity.ranges.heading = (0.0, 0.0)
