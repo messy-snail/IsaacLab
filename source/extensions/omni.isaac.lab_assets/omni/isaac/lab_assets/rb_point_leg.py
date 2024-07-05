@@ -35,7 +35,7 @@ RB_POINT_LEG_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 1.),
+        pos=(0.0, 0.0, 0.65),
         joint_pos={
             '.*L_ROLL_joint': 0.,
             '.*L_HIP_joint': 0.697, # +40 deg

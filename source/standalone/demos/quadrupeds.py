@@ -46,7 +46,7 @@ from omni.isaac.lab.assets import Articulation
 from omni.isaac.lab_assets.anymal import ANYMAL_B_CFG, ANYMAL_C_CFG, ANYMAL_D_CFG  # isort:skip
 from omni.isaac.lab_assets.spot import SPOT_CFG  # isort:skip
 from omni.isaac.lab_assets.unitree import UNITREE_A1_CFG, UNITREE_GO1_CFG, UNITREE_GO2_CFG  # isort:skip
-from omni.isaac.lab_assets.rbq10 import RBQ10_CFG
+from omni.isaac.lab_assets.rbq10 import RBQ10_CFG, RBQ10_CFG_FOR_STAND
 
 
 def define_origins(num_origins: int, spacing: float) -> list[list[float]]:
@@ -117,7 +117,7 @@ def design_scene() -> tuple[dict, list[list[float]]]:
     # Origin 8 with RBQ-10
     prim_utils.create_prim("/World/Origin8", "Xform", translation=origins[7])
     # -- Robot
-    rbq_10 = Articulation(RBQ10_CFG.replace(prim_path="/World/Origin8/Robot"))
+    rbq_10 = Articulation(RBQ10_CFG_FOR_STAND.replace(prim_path="/World/Origin8/Robot"))
 
     # return the scene information
     scene_entities = {
@@ -161,8 +161,8 @@ def run_simulator(sim: sim_utils.SimulationContext, entities: dict[str, Articula
         # apply default actions to the quadrupedal robots
         for robot in entities.values():
             # generate random joint positions
-            # joint_pos_target = robot.data.default_joint_pos + torch.randn_like(robot.data.joint_pos) * 0.1
-            joint_pos_target = robot.data.default_joint_pos + torch.randn_like(robot.data.joint_pos) * 0
+            joint_pos_target = robot.data.default_joint_pos + torch.randn_like(robot.data.joint_pos) * 0.1
+            # joint_pos_target = robot.data.default_joint_pos
             # apply action to the robot
             robot.set_joint_position_target(joint_pos_target)
             # write data to sim

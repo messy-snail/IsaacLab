@@ -121,7 +121,7 @@ class RbQ10RoughEnvCfg_PLAY(RbQ10RoughEnvCfg):
             self.scene.terrain.terrain_generator.num_cols = 5
             self.scene.terrain.terrain_generator.curriculum = False
 
-        self.commands.base_velocity.rel_standing_envs = 1
+        # self.commands.base_velocity.rel_standing_envs = 1
         self.commands.base_velocity.ranges.lin_vel_x = (0.7, 1.0)
         self.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)
         self.commands.base_velocity.ranges.heading = (0.0, 0.0)

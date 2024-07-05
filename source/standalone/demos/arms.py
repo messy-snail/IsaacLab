@@ -52,6 +52,7 @@ from omni.isaac.lab_assets import (
     KINOVA_JACO2_N6S300_CFG,
     KINOVA_GEN3_N7_CFG,
     SAWYER_CFG,
+    RB5_850e_CFG,
 )
 
 # isort: on
@@ -83,7 +84,15 @@ def design_scene() -> tuple[dict, list[list[float]]]:
 
     # Create separate groups called "Origin1", "Origin2", "Origin3"
     # Each group will have a mount and a robot on top of it
-    origins = define_origins(num_origins=6, spacing=2.0)
+    origins = define_origins(num_origins=7, spacing=2.0)
+    print(origins)
+
+    """
+    origin position
+    0 3 6 
+    1 4 7
+    2 5 8
+    """
 
     # Origin 1 with Franka Panda
     prim_utils.create_prim("/World/Origin1", "Xform", translation=origins[0])
@@ -149,6 +158,19 @@ def design_scene() -> tuple[dict, list[list[float]]]:
     sawyer_arm_cfg.init_state.pos = (0.0, 0.0, 1.03)
     sawyer = Articulation(cfg=sawyer_arm_cfg)
 
+    
+    # Origin 7 with RB5
+    prim_utils.create_prim("/World/Origin7", "Xform", translation=origins[6])
+    # -- Table
+    cfg = sim_utils.UsdFileCfg(
+        usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Mounts/Stand/stand_instanceable.usd", scale=(2.0, 2.0, 2.0)
+    )
+    cfg.func("/World/Origin7/Table", cfg, translation=(0.0, 0.0, 1.03))
+    # -- Robot
+    rb5_cfg = RB5_850e_CFG.replace(prim_path="/World/Origin7/Robot")
+    rb5_cfg.init_state.pos = (0.0, 0.0, 1.03)
+    rb5 = Articulation(cfg=rb5_cfg)
+
     # return the scene information
     scene_entities = {
         "franka_panda": franka_panda,
@@ -157,6 +179,7 @@ def design_scene() -> tuple[dict, list[list[float]]]:
         "kinova_j2n6s300": kinova_j2n6s300,
         "kinova_gen3n7": kinova_gen3n7,
         "sawyer": sawyer,
+        "rb5": rb5,
     }
     return scene_entities, origins
 
