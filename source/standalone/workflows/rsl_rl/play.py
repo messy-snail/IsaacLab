@@ -38,6 +38,7 @@ simulation_app = app_launcher.app
 import gymnasium as gym
 import os
 import torch
+import numpy as np
 
 from rsl_rl.runners import OnPolicyRunner
 
@@ -50,7 +51,7 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
     export_policy_as_onnx,
 )
 
-
+import pandas as pd
 def main():
     """Play with RSL-RL agent."""
     # parse configuration
@@ -91,13 +92,39 @@ def main():
     # reset environment
     obs, _ = env.get_observations()
     # simulate environment
+    csv_file = 'observations.csv'
+    csv_file2 = 'actions2.csv'
+    # policy = torch.jit.load('flat_policy.pt').to('cuda').eval()
     while simulation_app.is_running():
         # run everything in inference mode
         with torch.inference_mode():
             # agent stepping
+            # obs = torch.zeros(env.num_envs, 30).to('cuda')
+            # obs[:,9:12] = 0
             actions = policy(obs)
+            # actions[:] = torch.tensor([0, 0.697, -1.394, 0, 0.697, -1.394]).to('cuda')
+            # actions[:] = torch.tensor([0, 0, -1.394, 0, 0, -1.394]).to('cuda')
+            # actions[:] = torch.tensor([0, 0, 0, 0, 0, 0]).to('cuda')
             # env stepping
-            obs, _, _, _ = env.step(actions)
+            obs, _, _, extras = env.step(actions)
+            print(f'actions= {np.rad2deg(actions.cpu().numpy())}')
+            obs_np = obs.cpu().numpy()
+            left_forces = env.unwrapped.scene.sensors['contact_forces'].data.net_forces_w[:,5,2].cpu().numpy().reshape(-1, 1)
+            right_forces = env.unwrapped.scene.sensors['contact_forces'].data.net_forces_w[:,9,2].cpu().numpy().reshape(-1, 1)
+            obs_np = np.hstack((obs_np, left_forces, right_forces))
+            print(f'obs= {np.rad2deg(obs_np[:,12:18])}')
+            print(f'err= {np.rad2deg(actions.cpu().numpy()-obs_np[:,12:18])}')
+            print(f'err2= {np.rad2deg(obs_np[:,24:30]-obs_np[:,12:18])}')
+            print(f'gravity= {obs_np[:,6:9]}')
+            # obs_np = np.hstack((obs_np, right_forces))
+            # obs_np.hstack(actions)
+            
+            # df = pd.DataFrame(obs_np)
+            # df.to_csv(csv_file, mode='a', header=False, index=False) 
+            df = pd.DataFrame(actions.cpu().numpy())
+            df.to_csv(csv_file2, mode='a', header=False, index=False) 
+            # print(obs_np.shape)
+            
 
     # close the simulator
     env.close()
